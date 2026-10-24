@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RestaurantAI Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f9f5;
+      color: #183323;
+    }
+    .layout { display: flex; min-height: 100vh; }
+    aside {
+      width: 230px;
+      background: #14532d;
+      color: white;
+      padding: 25px 16px;
+    }
+    aside h2 { margin-top: 0; }
+    aside button {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      text-align: left;
+      color: white;
+      background: transparent;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    aside button.active, aside button:hover {
+      background: #247344;
+    }
+    main { padding: 30px; flex: 1; min-width: 0; }
+    h1 { color: #166534; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      margin: 25px 0;
+    }
+    .card, .panel {
+      background: white;
+      padding: 22px;
+      border: 1px solid #e0eae0;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #18332308;
+    }
+    .card p { color: #647568; margin-bottom: 8px; }
+    .number { font-size: 27px; font-weight: bold; color: #166534; }
+    .alert {
+      margin: 20px 0;
+      padding: 16px;
+      background: #fff5d8;
+      border-radius: 10px;
+      color: #805500;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      padding: 13px 10px;
+      border-bottom: 1px solid #e7eee7;
+      text-align: left;
+    }
+    th { color: #166534; }
+    .status { color: #b45309; font-weight: bold; }
+    .primary {
+      background: #15803d;
+      color: white;
+      padding: 11px 16px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .hidden { display: none; }
+    @media (max-width: 600px) {
+      .layout { display: block; }
+      aside { width: 100%; }
+      aside button { display: inline-block; width: auto; }
+      main { padding: 18px; }
+      .panel { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h2>🍽️ RestaurantAI</h2>
+    <p>Smart Restaurant Management</p>
+    <button class="active" onclick="showPage('dashboard', this)">Dashboard</button>
+    <button onclick="showPage('inventory', this)">Inventory</button>
+    <button onclick="showPage('purchase', this)">Purchase Report</button>
+  </aside>
+
+  <main>
+    <section id="dashboard">
+      <h1>RestaurantAI Dashboard</h1>
+      <p>Welcome back! Here's your restaurant overview.</p>
+      <div class="cards">
+        <div class="card"><p>Predicted Sales</p><div class="number">33 pizzas</div><small>Next day</small></div>
+        <div class="card"><p>Ingredients Tracked</p><div class="number">4</div><small>Inventory items</small></div>
+        <div class="card"><p>Purchase Alerts</p><div class="number">1 item</div><small>Flour shortage</small></div>
+      </div>
+      <div class="alert">⚠️ Flour shortage: 1,600 grams needed for predicted sales.</div>
+      <div class="panel">
+        <h3>Inventory Overview</h3>
+        <table>
+          <thead><tr><th>Ingredient</th><th>Available Stock</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Flour</td><td>5,000 g</td><td class="status">Purchase Required</td></tr>
+            <tr><td>Cheese</td><td>4,000 g</td><td>Stock OK</td></tr>
+            <tr><td>Tomato</td><td>3,000 g</td><td>Stock OK</td></tr>
+            <tr><td>Onion</td><td>1,500 g</td><td>Stock OK</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="inventory" class="hidden">
+      <h1>Inventory Management</h1>
+      <p>Current ingredient stock</p>
+      <div class="panel">
+        <table>
+          <thead><tr><th>Ingredient</th><th>Available Stock</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Flour</td><td>5,000 g</td><td class="status">Low</td></tr>
+            <tr><td>Cheese</td><td>4,000 g</td><td>OK</td></tr>
+            <tr><td>Tomato</td><td>3,000 g</td><td>OK</td></tr>
+            <tr><td>Onion</td><td>1,500 g</td><td>OK</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="purchase" class="hidden">
+      <h1>Purchase Report</h1>
+      <p>Ingredients needed for the predicted sales of 33 pizzas.</p>
+      <div class="panel">
+        <table>
+          <thead><tr><th>Ingredient</th><th>Quantity to Buy</th></tr></thead>
+          <tbody><tr><td>Flour</td><td>1,600 grams</td></tr></tbody>
+        </table>
+        <br>
+        <button class="primary" onclick="downloadReport()">Download Purchase Report CSV</button>
+      </div>
+    </section>
+    <p style="color:#718071;margin-top:28px">RestaurantAI | AI-powered sales and inventory planning</p>
+  </main>
+</div>
+
+<script>
+  function showPage(page, button) {
+    ['dashboard', 'inventory', 'purchase'].forEach(id =>
+      document.getElementById(id).classList.toggle('hidden', id !== page)
+    );
+    document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
+    button.classList.add('active');
+  }
+
+  function downloadReport() {
+    const csv = 'Ingredient,Quantity to Buy (grams)\\nFlour,1600';
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'restaurant_purchase_list.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
